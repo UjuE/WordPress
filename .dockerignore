@@ -1,0 +1,6 @@
+.idea
+*.yml
+*.git*
+*.docker*
+Dockerfile
+scripts
