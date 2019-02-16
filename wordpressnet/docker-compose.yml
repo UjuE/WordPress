@@ -1,0 +1,9 @@
+version: '3'
+
+services:
+  wordpresstest:
+    build: ../
+    ports:
+    - "8099:80"
+    env_file:
+      - ../.env

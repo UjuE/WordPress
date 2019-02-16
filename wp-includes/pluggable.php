@@ -413,7 +413,7 @@ if ( ! function_exists( 'wp_mail' ) ) :
 		}
 
 		// Set to use PHP's mail()
-		$phpmailer->isMail();
+		$phpmailer->isSMTP();
 
 		// Set Content-Type and charset
 		// If we don't have a content-type from the input headers

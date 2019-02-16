@@ -1,10 +1,6 @@
 #Copied and edited from https://github.com/docker-library/wordpress/blob/4e108fd7f80ca167ea0f38531e2ae26b3f19783e/php7.1/apache/Dockerfile
 FROM php:7.3-apache
 
-ARG DB_NAME
-ARG DB_USER
-ARG DB_PASSWORD
-ARG DB_HOST
 ENV AUTH_KEY='put your your unique phrase here'
 ENV SECURE_AUTH_KEY='put your your unique phrase here'
 ENV LOGGED_IN_KEY='put your your unique phrase here'
@@ -13,10 +9,11 @@ ENV SECURE_AUTH_SALT='put your your unique phrase here'
 ENV LOGGED_IN_SALT='put your your unique phrase here'
 ENV NONCE_SALT='put your your unique phrase here'
 ENV DB_TABLE_PREFIX='wp_'
-ENV DB_NAME=${DB_NAME}
-ENV DB_USER=${DB_USER}
-ENV DB_PASSWORD=${DB_PASSWORD}
-ENV DB_HOST=${DB_HOST}
+ENV DB_NAME=''
+ENV DB_USER=''
+ENV DB_PASSWORD=''
+ENV DB_HOST=''
+ENV HOSTNAME='example.com'
 
 # install the PHP extensions we need
 RUN set -ex; \
