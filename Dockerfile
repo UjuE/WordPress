@@ -1,19 +1,10 @@
 #Copied and edited from https://github.com/docker-library/wordpress/blob/4e108fd7f80ca167ea0f38531e2ae26b3f19783e/php7.1/apache/Dockerfile
 FROM php:7.3-apache
 
-ENV AUTH_KEY='put your your unique phrase here'
-ENV SECURE_AUTH_KEY='put your your unique phrase here'
-ENV LOGGED_IN_KEY='put your your unique phrase here'
-ENV NONCE_KEY='put your your unique phrase here'
-ENV SECURE_AUTH_SALT='put your your unique phrase here'
-ENV LOGGED_IN_SALT='put your your unique phrase here'
-ENV NONCE_SALT='put your your unique phrase here'
-ENV DB_TABLE_PREFIX='wp_'
-ENV DB_NAME=''
-ENV DB_USER=''
-ENV DB_PASSWORD=''
-ENV DB_HOST=''
-ENV HOSTNAME='example.com'
+ARG ROOT_EMAIL
+ARG SMTP_URL
+ARG SMTP_USER
+ARG SMTP_PASSWORD
 
 # install the PHP extensions we need
 RUN set -ex; \
@@ -53,6 +44,7 @@ RUN { \
 		echo 'opcache.revalidate_freq=2'; \
 		echo 'opcache.fast_shutdown=1'; \
 		echo 'opcache.enable_cli=1'; \
+		echo 'sendmail_path="/usr/sbin/sendmail -t -i"'; \
 	} > /usr/local/etc/php/conf.d/opcache-recommended.ini
 
 RUN a2enmod rewrite expires
@@ -61,6 +53,18 @@ WORKDIR /var/www/html
 
 ADD . /var/www/html/
 
-RUN chmod 777 /usr/local/bin/apache2-foreground;
+RUN apt-get update && apt-get install -q -y ssmtp mailutils && \
+    chmod 777 /usr/local/bin/apache2-foreground;
+
+RUN { \
+		echo "root=${ROOT_EMAIL}"; \
+		echo "mailhub=${SMTP_URL}"; \
+		echo "AuthUser=${SMTP_USER}"; \
+		echo "AuthPass=${SMTP_PASSWORD}"; \
+		echo "UseTLS=YES"; \
+		echo "UseSTARTTLS=YES"; \
+	} > /etc/ssmtp/ssmtp.conf
+
+RUN echo "root:${ROOT_EMAIL}:${SMTP_URL}" >> /etc/ssmtp/revaliases
 
 CMD ["/usr/local/bin/apache2-foreground"]

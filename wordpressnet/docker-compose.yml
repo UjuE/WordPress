@@ -2,8 +2,16 @@ version: '3'
 
 services:
   wordpresstest:
-    build: ../
+    build:
+      context: ../
+      args:
+        ROOT_EMAIL: ${ROOT_EMAIL}
+        SMTP_URL: ${SMTP_URL}
+        SMTP_USER: ${SMTP_USER}
+        SMTP_PASSWORD: ${SMTP_PASSWORD}
     ports:
     - "8099:80"
     env_file:
-      - ../.env
+      - .env
+    volumes:
+      - ${LOCAL_DIR}:/var/www/html/uploads
